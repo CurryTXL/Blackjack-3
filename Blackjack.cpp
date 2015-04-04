@@ -12,6 +12,7 @@ double deckvalue[13]; //shows the value of each card
 double sum1, sum2; //sum1 is the sum of player's value while sum2 is the sum of computers
 int dealt[4][13] = {0}; //shows whether this card has been used. 0 means unused
 string player_cards = "", computer_cards = ""; //store player and computer's card
+int num1, num2; //count how many cards player and computer own
 bool mark; 
 
 void create_deck(), deal1(), deal2(), player_phase(), computer_phase(), judge(), initalize();
@@ -44,6 +45,7 @@ void initalize(){ //initialize all.
 	player_cards = "";
 	computer_cards = "";
 	sum1 = 0, sum2 = 0; 
+	num1 = 0, num2 = 0;
 	mark = true;
 }
 
@@ -57,6 +59,7 @@ void deal1(){ //deal to player
 	player_cards += (deck[row][column] + " "); 
 	dealt[row][column] = 1; //after used, 0 changes into 1
 	sum1 += deckvalue[column]; //player sum change
+	num1 +=1; //card number +1
 }
 
 void deal2(){ //deal to computer,almost same to the formal one
@@ -69,10 +72,8 @@ void deal2(){ //deal to computer,almost same to the formal one
 	computer_cards += (deck[row][column] + " "); 
 	dealt[row][column] = 1;
 	sum2 += deckvalue[column];
+	num2 +=1;
 }
-
-
-
 
 void player_phase(){
 	cout << "player's phase" << endl;
@@ -104,7 +105,7 @@ void player_phase(){
     		deal1();
     		cout << "Another card get! " << player_cards << " total number:" << sum1 <<endl;
 			if (sum1 > 21){ //if your sum grater than 21,you lose
-				cout << endl << "YOU LOSE!";
+				cout << endl << "YOU LOSE!" << endl;
 				mark = false; //since you have lost,the following step is no need. this mark is used for this reason.
 				break;
 			}    	
@@ -120,18 +121,23 @@ void computer_phase(){
 	cout  << "computer's cards" << " ";
 	deal2();deal2();
 	cout << computer_cards << " total number:" << sum2 << endl;
-	while (sum2<sum1){ //computer will continue until its sum is greater
+	while (sum2 < sum1||(sum1 == sum2 && num2 < num1)){ //computer will continue until its sum is greater or total is equal but card number is less
 		deal2();
-		cout << "Another card get! " << computer_cards << " total number:" << sum2 <<endl;
+		cout << "Another card get! " << computer_cards << " total number:" << sum2 << endl;
 	}	
 }
 
 void judge(){ //judge who wins
+	if (sum1 == 21 && sum2 ==21 && num1 == num2){ //being such a case,reach a draw
+		cout << "A DRAW!" << endl;
+	} 
+	else{
 	if (sum2 > 21){
 		cout << endl << "YOU WIN!" << endl;
 	}else{
 		cout << endl << "YOU LOSE!" << endl;
 	} 
+	}
 }
 
 int main(){ //now it's easy to understand
@@ -164,3 +170,4 @@ int main(){ //now it's easy to understand
 	}while(choice == "Y"||choice == "y");
 	return 0;
 }
+
